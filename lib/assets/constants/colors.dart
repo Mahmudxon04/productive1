@@ -15,6 +15,10 @@ const cursorColor = _c4B7FD6;
 const textFieldBackgroundColor2 = _c1C233A;
 const textFieldBorderColor = _cfromRGBO;
 const hintTextColor = _whitish;
+const textButtonColor = _c4B7FD6;
+const wButtonColor = _c4B7FD6;
+var disabledButtonColor = _c4B7FD6.withOpacity(.3);
+
 //
 
 const _white = Color(0xFFFFFFFF);

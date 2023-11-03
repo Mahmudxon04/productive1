@@ -34,8 +34,8 @@ flutter:
     - assets/icons/
     - assets/icons/global/
     - assets/icons/tasks/
-    - assets/images/
-    - assets/objects/
+#    - assets/images/
+#    - assets/objects/
 
   fonts:
     - family: Barlow

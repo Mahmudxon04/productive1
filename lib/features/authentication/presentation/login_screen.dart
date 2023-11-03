@@ -6,9 +6,6 @@ import '../../../assets/constants/colors.dart';
 import '../../../assets/constants/icons.dart';
 
 class LoginScreen extends StatefulWidget {
-  static Route route() => MaterialPageRoute(
-        builder: (_) => const LoginScreen(),
-      );
 
   const LoginScreen({super.key});
 
@@ -17,6 +14,7 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  final _formKey = GlobalKey<FormState>();
   final mailTextEditingController = TextEditingController();
   final passwordTextEditingController = TextEditingController();
 
@@ -28,7 +26,6 @@ class _LoginScreenState extends State<LoginScreen> {
     fontSize: 14,
     fontWeight: FontWeight.w400,
   );
-
   bool isObscure = true;
 
   InputDecoration decoration({
@@ -85,64 +82,114 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16),
-        child: Column(
-          children: [
-            const Gap(67),
-            SvgPicture.asset(AppIcons.logo),
-            const Gap(44),
-            TextField(
-              style: textFieldContentStyle,
-              cursorColor: cursorColor,
-              focusNode: mailFocusNode,
-              controller: mailTextEditingController,
-              decoration: decoration(hintText: 'Email'),
-              textInputAction: TextInputAction.next,
-              keyboardType: TextInputType.emailAddress,
-              onEditingComplete: () {
-                passwordFocusNode.requestFocus();
-              },
-            ),
-            const Gap(16),
-            TextField(
-              style: textFieldContentStyle,
-              cursorColor: cursorColor,
-              focusNode: passwordFocusNode,
-              controller: passwordTextEditingController,
-              decoration: decoration(
-                hintText: 'Password',
-                suffixIcon: GestureDetector(
-                  onTap: () {
+      body: Form(
+        key: _formKey,
+        child: Builder(builder: (context) {
+          return Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: Column(
+              children: [
+                const Gap(67),
+                SvgPicture.asset(AppIcons.logo),
+                const Gap(44),
+                TextFormField(
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return "Please enter some text";
+                    }
+                    return null;
+                  },
+                  onChanged: (value) {
                     setState(() {
-                      isObscure = !isObscure;
                     });
                   },
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 12, vertical: 13.5),
-                    child: SvgPicture.asset(
-                      isObscure ? AppIcons.eyeOff : AppIcons.eyeOn,
+                  style: textFieldContentStyle,
+                  cursorColor: cursorColor,
+                  focusNode: mailFocusNode,
+                  controller: mailTextEditingController,
+                  decoration: decoration(hintText: 'Email'),
+                  textInputAction: TextInputAction.next,
+                  keyboardType: TextInputType.emailAddress,
+                  onEditingComplete: () {
+                    passwordFocusNode.requestFocus();
+                    _formKey.currentState!.validate();
+                  },
+                ),
+                const Gap(16),
+                TextFormField(
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return "Please enter some text";
+                    }
+                    return null;
+                  },
+                  onChanged: (value) {
+                    setState(() {
+                    });
+                  },
+                  style: textFieldContentStyle,
+                  cursorColor: cursorColor,
+                  focusNode: passwordFocusNode,
+                  controller: passwordTextEditingController,
+                  decoration: decoration(
+                    hintText: 'Password',
+                    suffixIcon: GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          isObscure = !isObscure;
+                        });
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 12, vertical: 13.5),
+                        child: SvgPicture.asset(
+                          isObscure ? AppIcons.eyeOff : AppIcons.eyeOn,
+                        ),
+                      ),
+                    ),
+                  ),
+                  onEditingComplete: () {
+                    _formKey.currentState!.validate();
+                    // TODO: Login
+                  },
+                  textInputAction: TextInputAction.done,
+                  keyboardType: TextInputType.visiblePassword,
+                  obscureText: isObscure,
+                ),
+                const Gap(12),
+                Align(
+                  alignment: Alignment.topRight,
+                  child: TextButton(
+                    onPressed: () {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('Bu button hali ishlamaydi'),
+                        ),
+                      );
+                    },
+                    child: const Text(
+                      'Forgot password?',
+                      style: TextStyle(color: cursorColor),
                     ),
                   ),
                 ),
-              ),
-              onEditingComplete: (){
-                // TODO: Login
-              },
-              textInputAction: TextInputAction.done,
-              keyboardType: TextInputType.visiblePassword,
-              obscureText: isObscure,
+                const Gap(16),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      minimumSize: const Size(double.infinity, 48),
+                      backgroundColor: cursorColor),
+                  onPressed: (mailTextEditingController.text.isNotEmpty && passwordTextEditingController.text.isNotEmpty)?(){}:null,
+                  child: const Text('Login'),
+                ),
+              ],
             ),
-            const Gap(12),
-            Text('Forgot password?'),
-            const Gap(16),
-            Container(
-              decoration: BoxDecoration(),
-              child: Text('Login'),
-            ),
-          ],
-        ),
+          );
+        }),
       ),
     );
   }

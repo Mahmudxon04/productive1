@@ -27,19 +27,8 @@ class _AppState extends State<App> {
         title: 'Productive',
         theme: AppTheme.darkTheme(),
         navigatorKey: _navigatorKey,
-        onGenerateRoute: (settings) => MaterialPageRoute(
-          builder: (_) => const SizedBox(),
-        ),
-        builder: (context, child) => AuthenticatedUser(
-          child: Builder(builder: (context) {
-            print("Came here");
-            
-            if (AuthenticatedUser.maybeOf(context)?.user == null) {
-              return const LoginScreen();
-            } else {
-              return const HomeScreen();
-            }
-          }),
-        ),
+        home: AuthenticatedUser.maybeOf(context)?.user == null
+            ? const LoginScreen()
+            : const HomeScreen(),
       );
 }
